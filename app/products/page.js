@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteProduct, getAllProducts } from "@/services/productService";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -9,31 +10,28 @@ const Products = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getProductsFunc = async () => {
+    const getItems = async () => {
       try {
-        const response = await axios.get(
-          "https://65034c35a0f2c1f3faebc287.mockapi.io/blog"
-        );
-        setItems(response.data);
+        const items = await getAllProducts();
+        setItems(items);
       } catch (error) {
-        console.log(error);
-      } finally {
+        console.log(error.message);
+      }
+      finally {
         setLoading(false);
       }
-    };
+    }
 
-    getProductsFunc();
+    getItems();
   }, []);
 
-  const deleteProduct = async (id) => {
+  const deleteProductFunc = async (id) => {
     try {
-      const resp = await axios.delete(
-        `https://65034c35a0f2c1f3faebc287.mockapi.io/blog/${id}`
-      );
+      const resp = await deleteProduct(id);
       setItems((prev) => prev.filter((item) => item.id !== id));
-      alert("Person Delete !");
+      alert("Product Delete !");
     } catch (error) {
-      alert("Person don't Delete !" + error);
+      alert("Product don't Delete !" + error);
     }
   };
 
@@ -44,7 +42,7 @@ const Products = () => {
           <h1 className="font-bold text-[36px] tracking-[3px]">CRUD Project</h1>
           <Link href={"/create"}>
             <button className="py-3 px-6 bg-red-500 text-white text-[18px] tracking-[1.5px] rounded-2xl font-bold transition-all hover:opacity-80">
-              Add Person
+              Add Product
             </button>
           </Link>
         </div>
@@ -59,14 +57,14 @@ const Products = () => {
                 className="w-[350px] h-[420px] flex flex-col gap-5"
               >
                 <div>
-                  <img className="w-[350px] h-[270px]" src={item.img} />
+                  <img className="w-[350px] h-[270px] object-contain" src={item.image} />
                 </div>
                 <div className="flex flex-col gap-5">
                   <div className="flex flex-col gap-2">
-                    <h3 className="text-2xl font-bold">{item.name}</h3>
                     <p className="text-xl font-normal w-[350px]">
-                      {item.blog?.slice(0, 30)}...
+                      {item.title}
                     </p>
+                    <h3 className="text-2xl font-bold">{item.price}Azn</h3>
                   </div>
                   <div className="flex gap-x-3 items-start mb-6">
                     <Link href={`/products/${item.id}`}>
@@ -80,7 +78,7 @@ const Products = () => {
                       </button>
                     </Link>
                     <button
-                      onClick={() => deleteProduct(item.id)}
+                      onClick={() => deleteProductFunc(item.id)}
                       className="inline-block font-bold py-2 px-5 border-none outline-none bg-green-500 text-white rounded-2xl text-[19px] transition-all hover:bg-opacity-85"
                     >
                       ❌

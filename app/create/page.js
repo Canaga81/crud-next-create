@@ -1,26 +1,31 @@
 "use client";
 
-import axios from 'axios';
+import { createProduct } from '@/services/productService';
 import Link from 'next/link';
 import React, { useState } from 'react';
 
 const Create = () => {
 
     const [item, setItem] = useState({
-        name: "",
-        blog: "",
-        img: "",
+        price: "",
+        title: "",
+        image: "",
     });
 
     const addHandler = () => {
 
-        try {
-            axios.post('https://65034c35a0f2c1f3faebc287.mockapi.io/blog', item);
-            alert("Person Create !");
-            setItem({name: "", blog: "", img: ""})
-        } catch (error) {
-            alert("Person don't create" + error);
+        const createProductFunc = async () => {
+            try {
+                const res = await createProduct(item)
+                alert("Product Create !");
+                setItem({price: "", title: "", image: ""});
+                window.location.href = '/products';
+            } catch (error) {
+                alert("Product don't create" + error);
+            }
         }
+
+        createProductFunc();
 
     }
 
@@ -33,9 +38,9 @@ const Create = () => {
                 <h1 className='font-bold text-[36px] tracking-[3px] text-center'>Create Person</h1>
             </div>
             <div className='flex flex-col gap-4 items-center w-full max-w-[600px]'>
-                <input value={item.name} type='text' onChange={(e) => setItem({...item, name: e.target.value})} className='w-full inline-block border-none outline-none text-xl font-normal bg-slate-200 text-black placeholder:text-black/70 py-3 px-10 rounded-md' placeholder="Adini Yaziniz" />
-                <input value={item.blog} type='text' onChange={(e) => setItem({...item, blog: e.target.value})} className='w-full inline-block border-none outline-none text-xl font-normal bg-slate-200 text-black placeholder:text-black/70 py-3 px-10 rounded-md' placeholder="Haqqinda melumat yaziniz" />
-                <input value={item.img} type='text' onChange={(e) => setItem({...item, img: e.target.value})} className='w-full inline-block border-none outline-none text-xl font-normal bg-slate-200 text-black placeholder:text-black/70 py-3 px-10 rounded-md' placeholder="Sekil url'i yaziniz" />
+                <input value={item.price} type='text' onChange={(e) => setItem({...item, price: e.target.value})} className='w-full inline-block border-none outline-none text-xl font-normal bg-slate-200 text-black placeholder:text-black/70 py-3 px-10 rounded-md' placeholder="Qiymetini Yaziniz" />
+                <input value={item.title} type='text' onChange={(e) => setItem({...item, title: e.target.value})} className='w-full inline-block border-none outline-none text-xl font-normal bg-slate-200 text-black placeholder:text-black/70 py-3 px-10 rounded-md' placeholder="Adini yaziniz" />
+                <input value={item.image} type='text' onChange={(e) => setItem({...item, image: e.target.value})} className='w-full inline-block border-none outline-none text-xl font-normal bg-slate-200 text-black placeholder:text-black/70 py-3 px-10 rounded-md' placeholder="Sekil url'i yaziniz" />
             </div>
             <div className='flex items-center gap-5'>
                 <Link href={'/products'}>

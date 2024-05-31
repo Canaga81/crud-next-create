@@ -1,9 +1,9 @@
 "use client";
 
 import { deleteProduct, getAllProducts } from "@/services/productService";
-import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { slugify } from "../utils/slugify";
 
 const Products = () => {
   const [items, setItems] = useState([]);
@@ -67,7 +67,7 @@ const Products = () => {
                     <h3 className="text-2xl font-bold">{item.price}Azn</h3>
                   </div>
                   <div className="flex gap-x-3 items-start mb-6">
-                    <Link href={`/products/${item.id}`}>
+                    <Link href={`/products/${item.id}-${slugify(item.title)}`}>
                       <button className="inline-block font-bold py-2 px-5 border-none outline-none bg-green-500 text-white rounded-2xl text-[19px] transition-all hover:bg-opacity-85">
                         Etrafli Melumat
                       </button>
